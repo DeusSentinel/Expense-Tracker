@@ -4,8 +4,9 @@ from datetime import date
 
 T_Amount = 0 
 # To Write data collected from user into a CSV file
-# "While True (....)" - To create a loop that only exits if there is no ValueError
+# "While True (....)" - To create a loop that only exits if the input is < 0 or there is a ValueError
 def create_expense_file():
+    global T_Amount
     headers = ["Date", "Expenses", "Amount"]
     while True:
         try:
@@ -26,11 +27,14 @@ def create_expense_file():
                 break
             except ValueError:
                 print("Please enter a valid amount in numeral.")
-    data.append(Date, Expense, f"$ {Amount:.2f}")
-    with open('expense.csv', mode='w', newline='') as file:
+        data.append([Date, Expense, f"$ {Amount:.2f}"])
+    with open('expense.csv', mode='a', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(headers)
         writer.writerows(data)
+
+    return_menu("Do you wish to return to menu? 'Yes' or 'No'")
+    
   
 #TO Open/ Read the Data in the CVS file
 # mode = r - to read/open
@@ -41,6 +45,7 @@ def display_expenses():
         reader = csv.reader(file)
         #
         print(tabulate(reader, headers="firstrow", tablefmt="grid"))
+    return_menu("Do you wish to return to menu? 'Yes' or 'No'")
 
 # To display a menu that allows the user to interact with the expense tracker
 def display_menu():
@@ -51,16 +56,38 @@ def display_menu():
             break
         except ValueError:
             print("Please select one of the displayed options.")
-    if option == 1:
-        create_expense_file()
-    elif option == 2:
-        display_expenses()
-    elif option == 3:
-        print(f"The total expense is {T_Amount:.2f}")
-    elif option == 4:
-        print("Have a Good Day!")
+    while True:
+        if option == 1:
+            create_expense_file()
+            break
+        elif option == 2:
+            display_expenses()
+            break
+        elif option == 3:
+            print(f"The total expense is {T_Amount:.2f}")
+            return_menu("Do you wish to return to menu? 'Yes' or 'No'") 
+            break
+        elif option == 4:
+            print("Have a Good Day!")
+            break
+        else:
+            print("Error. Please select from the displayed options.")
+            display_menu()
+
+def return_menu(prompt_message):
+    while True:
+        command = (input(prompt_message))
+        if command in ["Yes", "No"]:
+            break
+        else:
+            print("Please select 'Yes' or 'No'")
+    if command == "Yes":
+        display_menu()
     else:
-        print("Error. Please select from the displayed options.")
+        print("Have a good day!")
+
+        
+
 
 
 display_menu()
